@@ -1,18 +1,5 @@
-from prefect import flow, get_run_logger, tags, variables
+from prefect import flow, get_run_logger
 from prefect import task
-
-from datetime import timedelta
-import requests
-
-from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import ElasticNet
-
-import pandas as pd
-import numpy as np
-import mlflow
-
-import os
 
 
 @task
