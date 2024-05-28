@@ -1,0 +1,33 @@
+# Generic metadata about this project
+name: demo
+prefect-version: 2.13.8
+
+# definitions section allows you to define reusable components for your deployments
+definitions:
+  pull: &common_pull
+  - prefect.deployments.steps.set_working_directory:
+      directory: /opt/prefect
+  - prefect.deployments.steps.git_clone:
+     id: clone-step
+     repository: "https://github.com/emaoemi/prefect_trainer.git"
+  - prefect.deployments.steps.pip_install_requirements:
+     directory: "{{ clone-step.directory }}/flows"
+     #requirements_file: requirements.txt
+     stream_output: False
+
+# deployments section allows you to provide configuration for deploying flows
+deployments:
+- name: training_lstm
+  entrypoint: flows/flow.py:MLtraining
+  work_pool:
+    name: k3sWorkPool
+    job_variables: {}
+    image: docker.io/prefecthq/prefect:2-latest
+  pull: *common_pull
+- name: training_classifier
+  entrypoint: flows/flow.py:MLtraining
+  work_pool:
+    name: k3sWorkPool
+    job_variables: {}
+    image: docker.io/prefecthq/prefect:2-latest
+  pull: *common_pull
